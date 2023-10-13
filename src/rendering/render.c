@@ -38,6 +38,7 @@ void reset_framebuf(termsz sz) {
 
 void render(triangles T) {
     clear_screen();
+    cursor_home();
 
     termsz term = get_termsize();
     float viewplane_dist = vp_dist(term);
