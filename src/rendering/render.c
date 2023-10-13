@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <float.h>
 #include <math.h>
+#include <stddef.h>
 
 #include "../linalg/line.h"
 #include "../linalg/plane.h"
@@ -69,10 +70,16 @@ void render(triangles T) {
         bc = line_from_points(b, c);
         ca = line_from_points(c, a);
 
+        size_t min_x, min_y, max_x, max_y;
+        min_x = (size_t)fminf(fminf(a.x, b.x), c.x);
+        min_y = (size_t)fminf(fminf(a.y, b.y), c.y);
+        max_x = (size_t)ceilf(fmaxf(fmaxf(a.x, b.x), c.x));
+        max_y = (size_t)ceilf(fmaxf(fmaxf(a.y, b.y), c.y));
+
         float sign_ab, sign_bc, sign_ca;
         vec ray;
-        for (size_t row = 0; row < term.h; ++row) {
-            for (size_t col = 0; col < term.w; ++col) {
+        for (size_t row = min_y; row < max_y; ++row) {
+            for (size_t col = min_x; col < max_x; ++col) {
                 pixelf p = {(float)col, (float)row};
                 sign_ab = signed_distance(ab, p);
                 sign_bc = signed_distance(bc, p);
@@ -86,7 +93,6 @@ void render(triangles T) {
                     if (p_on_tri.z < FRAMEBUF.z[fb_idx]) {
                         FRAMEBUF.z[fb_idx] = p_on_tri.z;
                         vec n_ray = normalized(ray);
-                        // float lum = fabsf(-dot(n_ray, tri_plane.normal)) * 0.7f;
                         float lum = -dot(n_ray, tri_plane.normal) * 0.5f;
                         if (lum >= 0) {
                             FRAMEBUF.lum[fb_idx] =

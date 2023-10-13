@@ -18,6 +18,7 @@ typedef struct {
 } mat;
 
 mat from_euler(float rx, float ry, float rz);
+
 static inline mat identity() {
     mat m;
     m.a11 = m.a22 = m.a33 = 1;
