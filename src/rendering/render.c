@@ -1,0 +1,107 @@
+#include "render.h"
+
+#include <assert.h>
+#include <float.h>
+#include <math.h>
+
+#include "../linalg/line.h"
+#include "../linalg/plane.h"
+#include "../utils/term.h"
+#include "pixel.h"
+#include "viewplane.h"
+
+const float fov = 70;
+static float vp_dist(termsz sz) {
+    return (float)sz.w * 0.5f / tanf(fov * (float)M_PI / 180);
+}
+
+struct {
+    float *lum;
+    float *z;
+    size_t size;
+} FRAMEBUF = {NULL, NULL, 0};
+
+void reset_framebuf(termsz sz) {
+    size_t required = sz.h * sz.w;
+    if (required > FRAMEBUF.size) {
+        FRAMEBUF.lum = realloc(FRAMEBUF.lum, required * sizeof(float));
+        FRAMEBUF.z = realloc(FRAMEBUF.z, required * sizeof(float));
+        FRAMEBUF.size = required;
+    }
+    // Reset framebuffer contents
+    for (size_t i = 0; i < required; ++i) {
+        FRAMEBUF.lum[i] = 0;
+        FRAMEBUF.z[i] = FLT_MAX;
+    }
+}
+
+void render(triangles T) {
+    clear_screen();
+
+    termsz term = get_termsize();
+    float viewplane_dist = vp_dist(term);
+    reset_framebuf(term);
+
+    pixelf screen_offset = {(float)term.w * 0.5f, (float)term.h * 0.5f};
+
+    assert(T.n_verts > 0);
+    assert(T.n_inds > 0);
+    assert(T.n_inds % 3 == 0);
+    for (size_t triangle = 0; triangle < T.n_inds; triangle += 3) {
+        assert(T.indices[triangle] < T.n_verts);
+        assert(T.indices[triangle + 1] < T.n_verts);
+        assert(T.indices[triangle + 2] < T.n_verts);
+
+        vec av, bv, cv;
+        av = *T.vertices[T.indices[triangle]];
+        bv = *T.vertices[T.indices[triangle + 1]];
+        cv = *T.vertices[T.indices[triangle + 2]];
+
+        plane tri_plane = create_plane(av, bv, cv);
+
+        pixelf a, b, c;
+        a = into_viewplane(av, viewplane_dist, screen_offset);
+        b = into_viewplane(bv, viewplane_dist, screen_offset);
+        c = into_viewplane(cv, viewplane_dist, screen_offset);
+
+        line ab, bc, ca;
+        ab = line_from_points(a, b);
+        bc = line_from_points(b, c);
+        ca = line_from_points(c, a);
+
+        float sign_ab, sign_bc, sign_ca;
+        vec ray;
+        for (size_t row = 0; row < term.h; ++row) {
+            for (size_t col = 0; col < term.w; ++col) {
+                pixelf p = {(float)col, (float)row};
+                sign_ab = signed_distance(ab, p);
+                sign_bc = signed_distance(bc, p);
+                sign_ca = signed_distance(ca, p);
+                if (sign_ab > 0 && sign_bc > 0 && sign_ca > 0) {
+                    ray = ray_from_viewplane(
+                        row, col, viewplane_dist, screen_offset
+                    );
+                    vec p_on_tri = raycast(ray, tri_plane);
+                    size_t fb_idx = row * term.w + col;
+                    if (p_on_tri.z < FRAMEBUF.z[fb_idx]) {
+                        FRAMEBUF.z[fb_idx] = p_on_tri.z;
+                        vec n_ray = normalized(ray);
+                        // float lum = fabsf(-dot(n_ray, tri_plane.normal)) * 0.7f;
+                        float lum = -dot(n_ray, tri_plane.normal) * 0.5f;
+                        if (lum >= 0) {
+                            FRAMEBUF.lum[fb_idx] =
+                                lum +
+                                fmaxf(dot(n_ray, (vec){0, -1, 0}) * 0.5f, 0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (size_t row = 0; row < term.h; ++row) {
+        for (size_t col = 0; col < term.w; ++col) {
+            putchar(lum2char(FRAMEBUF.lum[row * term.w + col]));
+        }
+    }
+}
