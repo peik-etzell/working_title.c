@@ -78,6 +78,7 @@ void render(triangles T) {
 
         float sign_ab, sign_bc, sign_ca;
         vec ray;
+        float sun_illumination = fmaxf(dot(tri_plane.normal, (vec){0, -1, 0}) * 0.3f, 0);
         for (size_t row = min_y; row < max_y; ++row) {
             for (size_t col = min_x; col < max_x; ++col) {
                 pixelf p = {(float)col, (float)row};
@@ -93,11 +94,9 @@ void render(triangles T) {
                     if (p_on_tri.z < FRAMEBUF.z[fb_idx]) {
                         FRAMEBUF.z[fb_idx] = p_on_tri.z;
                         vec n_ray = normalized(ray);
-                        float lum = -dot(n_ray, tri_plane.normal) * 0.5f;
+                        float lum = -dot(n_ray, tri_plane.normal) * 0.7f;
                         if (lum >= 0) {
-                            FRAMEBUF.lum[fb_idx] =
-                                lum +
-                                fmaxf(dot(n_ray, (vec){0, -1, 0}) * 0.5f, 0);
+                            FRAMEBUF.lum[fb_idx] = lum + sun_illumination;
                         }
                     }
                 }
