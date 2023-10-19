@@ -20,5 +20,11 @@ static tfm mul_tt(tfm a, tfm b) {
     ){mul_mm(a.rotation, b.rotation),
       add(a.translation, mul_mv(a.rotation, b.translation))};
 }
+static tfm rotate(tfm t, mat r) {
+    return (tfm){mul_mm(t.rotation, r), t.translation};
+}
+static tfm translate(tfm t, vec v) {
+    return (tfm){t.rotation, add(t.translation, v)};
+}
 
 #endif

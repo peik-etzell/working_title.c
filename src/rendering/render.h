@@ -3,6 +3,6 @@
 
 #include "../linalg/triangle.h"
 
-void render(triangles T);
+void render(tribuf T);
 
 #endif

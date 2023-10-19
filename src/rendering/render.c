@@ -4,9 +4,11 @@
 #include <float.h>
 #include <math.h>
 #include <stddef.h>
+#include <stdio.h>
 
 #include "../linalg/line.h"
 #include "../linalg/plane.h"
+#include "../utils/macros.h"
 #include "../utils/term.h"
 #include "pixel.h"
 #include "viewplane.h"
@@ -36,28 +38,19 @@ void reset_framebuf(termsz sz) {
     }
 }
 
-void render(triangles T) {
-    clear_screen();
-    cursor_home();
-
+void render(tribuf T) {
     termsz term = get_termsize();
     float viewplane_dist = vp_dist(term);
     reset_framebuf(term);
 
     pixelf screen_offset = {(float)term.w * 0.5f, (float)term.h * 0.5f};
 
-    assert(T.n_verts > 0);
-    assert(T.n_inds > 0);
-    assert(T.n_inds % 3 == 0);
-    for (size_t triangle = 0; triangle < T.n_inds; triangle += 3) {
-        assert(T.indices[triangle] < T.n_verts);
-        assert(T.indices[triangle + 1] < T.n_verts);
-        assert(T.indices[triangle + 2] < T.n_verts);
+    for (size_t t = 0; t < T.n; ++t) {
 
         vec av, bv, cv;
-        av = *T.vertices[T.indices[triangle]];
-        bv = *T.vertices[T.indices[triangle + 1]];
-        cv = *T.vertices[T.indices[triangle + 2]];
+        av = *T.data[t].a;
+        bv = *T.data[t].b;
+        cv = *T.data[t].c;;
 
         plane tri_plane = create_plane(av, bv, cv);
 
@@ -105,6 +98,8 @@ void render(triangles T) {
         }
     }
 
+    clear_screen();
+    cursor_home();
     for (size_t row = 0; row < term.h; ++row) {
         for (size_t col = 0; col < term.w; ++col) {
             putchar(lum2char(FRAMEBUF.lum[row * term.w + col]));

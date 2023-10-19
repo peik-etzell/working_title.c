@@ -1,44 +1,50 @@
 #include "cube.h"
 
+#include <stddef.h>
+
 #include "../../utils/macros.h"
-
-size_t BOX_INDICES[36];
-int INDICES_INIT = 0;
-
-size_t* indices() {
-    if (!INDICES_INIT) {
-        size_t corners[4] = {0b000, 0b011, 0b101, 0b110};
-        size_t i = 0;
-        for (size_t j = 0; j < 4; ++j) {
-            size_t c = corners[j];
-            BOX_INDICES[i++] = c;
-            BOX_INDICES[i++] = c ^ 0b001;
-            BOX_INDICES[i++] = c ^ 0b100;
-            BOX_INDICES[i++] = c;
-            BOX_INDICES[i++] = c ^ 0b010;
-            BOX_INDICES[i++] = c ^ 0b001;
-            BOX_INDICES[i++] = c;
-            BOX_INDICES[i++] = c ^ 0b100;
-            BOX_INDICES[i++] = c ^ 0b010;
-        }
-        INDICES_INIT = 1;
-    }
-    return BOX_INDICES;
-}
+#include "object.h"
 
 typedef struct {
     float size;
 } cube_data;
 
-void append_cube(triangles* triangles, object* cube) {
-    append_triangles(triangles, cube->vertices, 8, indices(), 36);
+void append_cube(tribuf* T, const object* cube) {
+    size_t corners[4] = {0b000, 0b011, 0b101, 0b110};
+    for (size_t j = 0; j < 4; ++j) {
+        size_t c = corners[j];
+        tribuf_append(
+            T,
+            (tri){
+                cube->vertices + c,
+                cube->vertices + (c ^ 0b001),
+                cube->vertices + (c ^ 0b100),
+            }
+        );
+        tribuf_append(
+            T,
+            (tri){
+                cube->vertices + c,
+                cube->vertices + (c ^ 0b010),
+                cube->vertices + (c ^ 0b001),
+            }
+        );
+        tribuf_append(
+            T,
+            (tri){
+                cube->vertices + c,
+                cube->vertices + (c ^ 0b100),
+                cube->vertices + (c ^ 0b010),
+            }
+        );
+    }
 }
 
-static void update_vertices(object* obj) {
-    float half_size = ((cube_data*)obj->data)->size * 0.5f;
+static void update_vertices(object* cube) {
+    float half_size = ((cube_data*)cube->data)->size * 0.5f;
     for (int i = 0b000; i < 8; ++i) {
-        obj->vertices[i] = mul_tv(
-            obj->transform,
+        cube->vertices[i] = mul_tv(
+            cube->transform,
             (vec){
                 (i & 0b001) ? half_size : -half_size,
                 (i & 0b010) ? half_size : -half_size,
