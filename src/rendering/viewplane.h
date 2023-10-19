@@ -17,7 +17,7 @@ static const float CHAR_RATIO_RECIP = 1.f / CHAR_RATIO;
 vec raycast(vec ray, plane plane);
 
 static inline pixelf into_viewplane(vec p, float vp_dist, pixelf offset) {
-    float scale = vp_dist / p.z;
+    float scale = fabsf(vp_dist / p.z);
     return (pixelf){p.x * scale * CHAR_RATIO + offset.x, p.y * scale + offset.y};
 }
 

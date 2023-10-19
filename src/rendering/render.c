@@ -13,9 +13,9 @@
 #include "pixel.h"
 #include "viewplane.h"
 
-const float fov = 70;
+const float FOV = 70;
 static float vp_dist(termsz sz) {
-    return (float)sz.w * 0.5f / tanf(fov * (float)M_PI / 180);
+    return (float)sz.w * 0.5f / tanf(FOV * (float)M_PI / 180);
 }
 
 struct {
@@ -65,33 +65,35 @@ void render(tribuf T) {
         ca = line_from_points(c, a);
 
         size_t min_x, min_y, max_x, max_y;
-        min_x = (size_t)fminf(fminf(a.x, b.x), c.x);
-        min_y = (size_t)fminf(fminf(a.y, b.y), c.y);
-        max_x = (size_t)ceilf(fmaxf(fmaxf(a.x, b.x), c.x));
-        max_y = (size_t)ceilf(fmaxf(fmaxf(a.y, b.y), c.y));
+        min_x = (size_t)boundf(min3(a.x, b.x, c.x), 0, (float)term.w);
+        min_y = (size_t)boundf(min3(a.y, b.y, c.y), 0, (float)term.h);
+        max_x = (size_t)boundf(ceilf(max3(a.x, b.x, c.x)), 0, (float)term.w);
+        max_y = (size_t)boundf(ceilf(max3(a.y, b.y, c.y)), 0, (float)term.h);
 
         float sign_ab, sign_bc, sign_ca;
         vec ray;
-        float sun_illumination = fmaxf(dot(tri_plane.normal, (vec){0, -1, 0}) * 0.3f, 0);
+        float sun_illumination =
+            fmaxf(dot(tri_plane.normal, (vec){0, -1, 0}) * 0.1f, 0);
         for (size_t row = min_y; row < max_y; ++row) {
             for (size_t col = min_x; col < max_x; ++col) {
                 pixelf p = {(float)col, (float)row};
                 sign_ab = signed_distance(ab, p);
                 sign_bc = signed_distance(bc, p);
                 sign_ca = signed_distance(ca, p);
+                // Pixel inside triangle?
                 if (sign_ab > 0 && sign_bc > 0 && sign_ca > 0) {
                     ray = ray_from_viewplane(
                         row, col, viewplane_dist, screen_offset
                     );
                     vec p_on_tri = raycast(ray, tri_plane);
                     size_t fb_idx = row * term.w + col;
-                    if (p_on_tri.z < FRAMEBUF.z[fb_idx]) {
+                    // Pixel foremost thus far? (and not behind camera)
+                    if (p_on_tri.z < FRAMEBUF.z[fb_idx] && p_on_tri.z > 0) {
                         FRAMEBUF.z[fb_idx] = p_on_tri.z;
                         vec n_ray = normalized(ray);
-                        float lum = -dot(n_ray, tri_plane.normal) * 0.7f;
-                        if (lum >= 0) {
+                        float lum = -dot(n_ray, tri_plane.normal) * 0.9f;
+                        if (lum > 0)
                             FRAMEBUF.lum[fb_idx] = lum + sun_illumination;
-                        }
                     }
                 }
             }
