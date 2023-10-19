@@ -102,9 +102,19 @@ void render(tribuf T) {
 
     clear_screen();
     cursor_home();
+    int jumping = 0;
     for (size_t row = 0; row < term.h; ++row) {
         for (size_t col = 0; col < term.w; ++col) {
-            putchar(lum2char(FRAMEBUF.lum[row * term.w + col]));
+            float luminance = FRAMEBUF.lum[row * term.w + col];
+            if (luminance == 0) {
+                jumping = 1;
+                continue;
+            }
+            if (jumping) {
+                cursor_move(row, col);
+                jumping = 0;
+            }
+            putchar(lum2char(luminance));
         }
     }
 }
