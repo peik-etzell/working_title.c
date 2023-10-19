@@ -11,5 +11,5 @@ case $build_type in
         ;;
 esac
 
-cmake -S . -B build -DCMAKE_BUILD_TYPE="$build_type"
+cmake -S . -B build -DCMAKE_BUILD_TYPE="$build_type" -GNinja
 cmake --build build
