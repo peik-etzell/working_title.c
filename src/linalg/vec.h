@@ -70,7 +70,7 @@ static inline vec divide(vec v, float s) { return mul_vs(v, 1.f / s); }
 static inline vec normalized(vec v) { return divide(v, len(v)); }
 
 static inline void print_vec(vec v) {
-    printf("[% 3f, % 3f, % 3f]\n", (double)v.x, (double)v.y, (double)v.z);
+    printf("[% .2E, % .2E, % .2E]\n", (double)v.x, (double)v.y, (double)v.z);
 }
 
 #endif
