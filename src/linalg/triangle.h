@@ -1,10 +1,6 @@
 #ifndef LINALG_TRIANGLE_H
 #define LINALG_TRIANGLE_H
 
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "../utils/buf.h"
 #include "vec.h"
 
