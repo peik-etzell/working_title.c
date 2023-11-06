@@ -22,6 +22,7 @@ mat from_euler(float rx, float ry, float rz);
 static inline mat identity() {
     mat m;
     m.a11 = m.a22 = m.a33 = 1;
+    m.a12 = m.a13 = m.a21 = m.a23 = m.a31 = m.a32 = 0;
     return m;
 }
 static inline float det(mat m) {
@@ -62,8 +63,8 @@ static mat mul_mm(mat a, mat b) {
         ){dot(row1(a), col1(b)), dot(row2(a), col1(b)), dot(row3(a), col1(b))},
         (vec
         ){dot(row1(a), col2(b)), dot(row2(a), col2(b)), dot(row3(a), col2(b))},
-        (vec
-        ){dot(row1(a), col3(b)), dot(row2(a), col3(b)), dot(row3(a), col3(b))}
+        (vec){
+            dot(row1(a), col3(b)), dot(row2(a), col3(b)), dot(row3(a), col3(b))}
     );
 }
 static void print_mat(mat m) {
