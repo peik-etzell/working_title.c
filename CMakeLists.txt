@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(working_title)
 
 add_compile_options(
+  "$<$<CONFIG:DEBUG>:-O0>"
   -Wall
   -Wextra
   -Wconversion
