@@ -15,14 +15,14 @@
 
 const float FOV = 70;
 static float vp_dist(termsz sz) {
-    return (float)sz.w * 0.5f / tanf(FOV * (float)M_PI / 180);
+    return (float)sz.w * 0.5f / tanf(FOV * 0.5f * (float)M_PI / 360);
 }
 
 struct {
     float *lum;
     float *z;
     size_t size;
-} FRAMEBUF = {NULL, NULL, 0};
+} FRAMEBUF = {0};
 
 void reset_framebuf(termsz sz) {
     size_t required = sz.h * sz.w;
@@ -50,7 +50,7 @@ void render(tribuf T) {
         vec av, bv, cv;
         av = *T.data[t].a;
         bv = *T.data[t].b;
-        cv = *T.data[t].c;;
+        cv = *T.data[t].c;
 
         plane tri_plane = create_plane(av, bv, cv);
 
@@ -101,7 +101,6 @@ void render(tribuf T) {
     }
 
     clear_screen();
-    cursor_home();
     int jumping = 0;
     for (size_t row = 0; row < term.h; ++row) {
         for (size_t col = 0; col < term.w; ++col) {
@@ -117,4 +116,5 @@ void render(tribuf T) {
             putchar(lum2char(luminance));
         }
     }
+    cursor_home();
 }
