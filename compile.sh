@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 build_type=$1
 case $build_type in
