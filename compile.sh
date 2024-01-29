@@ -1,15 +1,15 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-build_type=$1
-case $build_type in
+case $1 in
     'Debug' | 'Release' | 'RelWithDebInfo' | 'MinSizeRel')
-        echo "Using ${build_type}"
+        echo "Using $1"
+        export CMAKE_BUILD_TYPE="$1"
         ;;
     *)
         echo "Using default 'Debug' build type"
-        build_type='Debug'
+        export CMAKE_BUILD_TYPE='Debug'
         ;;
 esac
 
-cmake -S . -B build -DCMAKE_BUILD_TYPE="$build_type" -GNinja
+cmake -S . -B build
 cmake --build build

@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 project(working_title)
 
 add_compile_options(
-  "$<$<CONFIG:DEBUG>:-O0>"
   -Wall
   -Wextra
   -Wconversion
@@ -11,8 +10,6 @@ add_compile_options(
   -Wno-unused-function
   -fsanitize=address,undefined)
 add_link_options(-fsanitize=address,undefined)
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(LINALG ./src/linalg/mat.c ./src/linalg/plane.c ./src/linalg/line.c)
 set(RENDERING
