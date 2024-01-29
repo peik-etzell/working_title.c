@@ -6,7 +6,7 @@
 #include "pixel.h"
 
 // Monospace characters are CHAR_RATIO times taller than wide
-static const float CHAR_RATIO = 3.f / 1;
+static const float CHAR_RATIO = 2.5f / 1.f;
 // Reciprocal of CHAR_RATIO
 static const float CHAR_RATIO_RECIP = 1.f / CHAR_RATIO;
 
