@@ -18,7 +18,8 @@ vec raycast(vec ray, plane plane);
 
 static inline pixelf into_viewplane(vec p, float vp_dist, pixelf offset) {
     float scale = fabsf(vp_dist / p.z);
-    return (pixelf){p.x * scale * CHAR_RATIO + offset.x, p.y * scale + offset.y};
+    return (pixelf){
+        p.x * scale * CHAR_RATIO + offset.x, p.y * scale + offset.y};
 }
 
 /**
@@ -27,7 +28,9 @@ static inline pixelf into_viewplane(vec p, float vp_dist, pixelf offset) {
 static inline vec ray_from_viewplane(
     size_t row, size_t col, float vp_dist, pixelf offset
 ) {
-    return (vec){((float)col - offset.x) * CHAR_RATIO_RECIP, (float)row - offset.y, vp_dist};
+    return (vec){
+        ((float)col - offset.x) * CHAR_RATIO_RECIP, (float)row - offset.y,
+        vp_dist};
 }
 
 #endif
