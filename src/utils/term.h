@@ -17,25 +17,12 @@ static termsz get_termsize(void) {
     return (termsz){ws.ws_col, ws.ws_row};
 }
 
-static inline void cursor_home(void) {
-    putchar(0x1B);
-    printf("[;H");
-}
+static inline void cursor_home(void) { fputs("\x1B[;H", stdout); }
 static inline void cursor_move(size_t row, size_t col) {
-    putchar(0x1B);
-    printf("[%zu;%zuH", row, col);
+    printf("\x1B[%zu;%zuH", row, col);
 }
-static inline void cursor_prev_line(void) {
-    putchar(0x1B);
-    printf("[F");
-}
-static inline void cursor_next_line(void) {
-    putchar(0x1B);
-    printf("[E");
-}
-static inline void clear_screen(void) {
-    putchar(0x1B);
-    printf("[2J");
-}
+static inline void cursor_prev_line(void) { fputs("\x1B[F", stdout); }
+static inline void cursor_next_line(void) { fputs("\x1B[E", stdout); }
+static inline void clear_screen(void) { fputs("\x1B[2J", stdout); }
 
 #endif
