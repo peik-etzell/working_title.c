@@ -11,6 +11,7 @@
 #include "../linalg/vec.h"
 #include "../rendering/primitives/object.h"
 #include "../rendering/render.h"
+#include "../utils/term.h"
 
 static int stop = 0;
 
@@ -48,5 +49,6 @@ int main(void) {
     free(cube.vertices);
     free(cube.data);
     free(T.data);
+    clear_screen();
     return EXIT_SUCCESS;
 }
