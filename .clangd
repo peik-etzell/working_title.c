@@ -1,0 +1,7 @@
+CompileFlags:
+  Add: [-xc, -std=c17, -Wall]
+  Compiler: cc
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
+

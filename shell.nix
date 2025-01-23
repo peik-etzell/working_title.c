@@ -1,10 +1,18 @@
-{ pkgs ? import <nixpkgs> { } }:
-# put clang after clang-tools to make clangd work
+{
+  pkgs ? import <nixpkgs> { },
+}:
 pkgs.mkShell {
-  buildInputs = with pkgs; [ ccache cmake ninja gdb clang-tools ];
+  packages = with pkgs; [
+    gdb
+    clang-tools
+  ];
+  nativeBuildInputs = with pkgs; [
+    cmake
+    ninja
+  ];
+  hardeningDisable = [ "fortify" ];
 
-  CMAKE_C_COMPILER_LAUNCHER = "ccache";
-  CMAKE_C_FLAGS_DEBUG = "-g -O0";
-  CMAKE_GENERATOR = "Ninja";
-  CMAKE_EXPORT_COMPILE_COMMANDS = "ON";
+  # https://nullprogram.com/blog/2023/04/29/
+  ASAN_OPTIONS = "abort_on_error=1:halt_on_error=1";
+  UBSAN_OPTIONS = "abort_on_error=1:halt_on_error=1";
 }
