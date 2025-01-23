@@ -1,7 +1,6 @@
 #include "pixel.h"
 
 #include <assert.h>
-#include <stdio.h>
 
 // https://stackoverflow.com/a/74186686
 // Converted to C code with python script

@@ -5,9 +5,11 @@
 #include <math.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../linalg/line.h"
 #include "../linalg/plane.h"
+#include "../linalg/triangle.h"
 #include "../utils/macros.h"
 #include "../utils/term.h"
 #include "pixel.h"
@@ -46,7 +48,6 @@ void render(tribuf T) {
     pixelf screen_offset = {(float)term.w * 0.5f, (float)term.h * 0.5f};
 
     for (size_t t = 0; t < T.n; ++t) {
-
         vec av, bv, cv;
         av = *T.data[t].a;
         bv = *T.data[t].b;

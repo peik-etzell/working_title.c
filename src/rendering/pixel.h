@@ -1,5 +1,4 @@
-#ifndef RENDERING_PIXEL_H
-#define RENDERING_PIXEL_H
+#pragma once
 
 typedef struct {
     float x;
@@ -12,5 +11,3 @@ typedef struct {
 } pixel;
 
 char lum2char(float luminance);
-
-#endif

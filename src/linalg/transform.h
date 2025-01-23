@@ -1,5 +1,4 @@
-#ifndef LINALG_TRANSFORM_H
-#define LINALG_TRANSFORM_H
+#pragma once
 
 #include "mat.h"
 #include "vec.h"
@@ -9,22 +8,8 @@ typedef struct {
     vec translation;
 } tfm;
 
-static tfm mul_ts(tfm t, float s) {
-    return (tfm){mul_ms(t.rotation, s), mul_vs(t.translation, s)};
-}
-static vec mul_tv(tfm t, vec v) {
-    return add(mul_mv(t.rotation, v), t.translation);
-}
-static tfm mul_tt(tfm a, tfm b) {
-    return (tfm
-    ){mul_mm(a.rotation, b.rotation),
-      add(a.translation, mul_mv(a.rotation, b.translation))};
-}
-static tfm rotate(tfm t, mat r) {
-    return (tfm){mul_mm(t.rotation, r), t.translation};
-}
-static tfm translate(tfm t, vec v) {
-    return (tfm){t.rotation, add(t.translation, v)};
-}
-
-#endif
+tfm mul_ts(tfm t, float s);
+vec mul_tv(tfm t, vec v);
+tfm mul_tt(tfm a, tfm b);
+tfm rotate(tfm t, mat r);
+tfm translate(tfm t, vec v);

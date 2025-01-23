@@ -1,8 +1,6 @@
-#ifndef UTILS_MACROS_H
-#define UTILS_MACROS_H
+#pragma once
 
 #include <math.h>
-#include <stdlib.h>
 
 #define new(type, count) (type*)malloc(count * sizeof(type))
 #define min(a, b) ((a) < (b)) ? (a) : (b)
@@ -13,5 +11,3 @@
 static inline float boundf(float val, float lo, float hi) {
     return fminf(hi, fmaxf(lo, val));
 }
-
-#endif

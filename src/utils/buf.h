@@ -1,5 +1,4 @@
-#ifndef UTILS_BUF_H
-#define UTILS_BUF_H
+#pragma once
 
 #include <stdlib.h>
 
@@ -21,5 +20,3 @@
 
 DECL_BUF(intbuf, int);
 DECL_BUF(floatbuf, float);
-
-#endif

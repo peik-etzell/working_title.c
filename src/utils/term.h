@@ -1,6 +1,6 @@
-#ifndef UTILS_TERM_H
-#define UTILS_TERM_H
+#pragma once
 
+#include <asm-generic/ioctls.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -24,5 +24,3 @@ static inline void cursor_move(size_t row, size_t col) {
 static inline void cursor_prev_line(void) { fputs("\x1B[F", stdout); }
 static inline void cursor_next_line(void) { fputs("\x1B[E", stdout); }
 static inline void clear_screen(void) { fputs("\x1B[2J", stdout); }
-
-#endif

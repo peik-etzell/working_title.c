@@ -1,5 +1,4 @@
-#ifndef LINALG_TRIANGLE_H
-#define LINALG_TRIANGLE_H
+#pragma once
 
 #include "../utils/buf.h"
 #include "vec.h"
@@ -11,5 +10,3 @@ typedef struct {
 } tri;
 
 DECL_BUF(tribuf, tri);
-
-#endif

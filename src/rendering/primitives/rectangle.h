@@ -1,5 +1,4 @@
-#ifndef RENDERING_PRIMITIVES_RECTANGLE_H
-#define RENDERING_PRIMITIVES_RECTANGLE_H
+#pragma once
 
 #include "../../linalg/transform.h"
 #include "../../linalg/triangle.h"
@@ -7,5 +6,3 @@
 
 object new_rectangle(tfm transform, float size_x, float size_y);
 void append_rectangle(tribuf* T, const object* rect);
-
-#endif

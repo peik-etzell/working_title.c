@@ -1,8 +1,4 @@
-#ifndef LINALG_VEC_H
-#define LINALG_VEC_H
-
-#include <math.h>
-#include <stdio.h>
+#pragma once
 
 typedef struct {
     float x;
@@ -19,58 +15,40 @@ static const vec zerovec = {0, 0, 0};
  * Add two vectors
  * @returns (a + b)
  */
-static inline vec add(vec a, vec b) {
-    return (vec){a.x + b.x, a.y + b.y, a.z + b.z};
-}
+vec add(vec a, vec b);
 /**
  * Subtract b from a
  * @returns (a - b)
  */
-static inline vec sub(vec a, vec b) {
-    return (vec){a.x - b.x, a.y - b.y, a.z - b.z};
-}
+vec sub(vec a, vec b);
 /**
  * Dot product
  * @returns a \cdot b
  */
-static inline float dot(vec a, vec b) {
-    return (a.x * b.x + a.y * b.y + a.z * b.z);
-}
+float dot(vec a, vec b);
 /**
  * Cross product
  * @returns a x b
  */
-static inline vec cross(vec a, vec b) {
-    return (vec
-    ){
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x};
-}
+vec cross(vec a, vec b);
 /**
  * Length
  * @returns |v|
  */
-static inline float len(vec v) { return sqrtf(dot(v, v)); }
+float len(vec v);
 /**
  * Multiply
  * @returns v * s = s * v
  */
-static inline vec mul_vs(vec v, float s) {
-    return (vec){v.x * s, v.y * s, v.z * s};
-}
+vec mul_vs(vec v, float s);
 /**
  * Divide
  * @returns v / s = v * (1./s)
  */
-static inline vec divide(vec v, float s) { return mul_vs(v, 1.f / s); }
+vec divide(vec v, float s);
 /**
  * Normalized
  */
-static inline vec normalized(vec v) { return divide(v, len(v)); }
+vec normalized(vec v);
 
-static inline void print_vec(vec v) {
-    printf("[% .2E, % .2E, % .2E]\n", (double)v.x, (double)v.y, (double)v.z);
-}
-
-#endif
+void print_vec(vec v);

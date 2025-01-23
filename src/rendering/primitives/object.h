@@ -1,11 +1,10 @@
-#ifndef RENDERING_PRIMITIVES_OBJECT_H
-#define RENDERING_PRIMITIVES_OBJECT_H
+#pragma once
 
 #include <assert.h>
-#include <stddef.h>
-#include <stdlib.h>
+
 #include "../../linalg/mat.h"
 #include "../../linalg/transform.h"
+#include "../../linalg/vec.h"
 #include "../../utils/buf.h"
 
 #define update(object) object.update_vertices(&object)
@@ -20,13 +19,6 @@ struct object {
 
 DECL_BUF(objbuf, object);
 
-static void translate_obj(object *obj, vec t) {
-    obj->transform = translate(obj->transform, t);
-}
+void translate_obj(object *obj, vec t);
 
-static void rotate_obj(object *obj, mat r) {
-    assert(fabsf(det(r) - 1.f) < 1e-6f);
-    obj->transform = rotate(obj->transform, r);
-}
-
-#endif
+void rotate_obj(object *obj, mat r);

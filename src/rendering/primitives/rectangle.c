@@ -2,6 +2,9 @@
 
 #include <stddef.h>
 
+#include "../../linalg/transform.h"
+#include "../../linalg/triangle.h"
+#include "../../linalg/vec.h"
 #include "../../utils/macros.h"
 #include "object.h"
 

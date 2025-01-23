@@ -1,5 +1,7 @@
 #include "line.h"
 
+#include "../rendering/pixel.h"
+
 /**
  * sign(x,y) = (x2 - x1)(y1 - y) - (x1 - x)(y2 - y1)
  * = (x1 - x2)y + (y2 - y1)x + (x2 - x1)y1 - (y2 - y1)x1

@@ -9,7 +9,7 @@ DEPS := $(OBJS:.o=.d)
 
 EXEC = cube
 
-CFLAGS = -g3 -O0 -Wall -Wno-unused-function -Wno-unused-parameter \
+CFLAGS = -std=gnu17 -g3 -O0 -Wall -Wno-unused-function -Wno-unused-parameter \
 	 -Wconversion -Wdouble-promotion \
 	 -fsanitize=address,undefined
 
