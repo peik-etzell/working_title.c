@@ -1,5 +1,5 @@
 CompileFlags:
-  Add: [-xc, -std=c17, -Wall]
+  Add: [-xc, -std=gnu17, -Wall]
   Compiler: cc
 Diagnostics:
   UnusedIncludes: Strict
