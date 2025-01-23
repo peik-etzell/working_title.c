@@ -1,4 +1,8 @@
 #include "../rendering/primitives/cube.h"
+
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "../linalg/mat.h"
@@ -8,14 +12,26 @@
 #include "../rendering/primitives/object.h"
 #include "../rendering/render.h"
 
+static int stop = 0;
+
+static void catch_sigint(int signo) {
+    (void)signo;
+    stop = 1;
+}
+
 int main(void) {
+    if (signal(SIGINT, catch_sigint) == SIG_ERR) {
+        fputs("Failed to set signal handler.\n", stderr);
+        return EXIT_FAILURE;
+    }
+
     tribuf T = {0};
     object cube = new_cube((tfm){identity(), (vec){0, 0, 3}}, 0.1f);
     append_cube(&T, &cube);
     mat rot = from_euler(0.01f, 0.02f, 0);
     vec vel = {0, 0, 0};
 
-    while (1) {
+    while (!stop) {
         if (cube.transform.translation.z > 0) {
             vel.z -= 0.003f;
         } else {
@@ -32,5 +48,5 @@ int main(void) {
     free(cube.vertices);
     free(cube.data);
     free(T.data);
-    return 0;
+    return EXIT_SUCCESS;
 }
