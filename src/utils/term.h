@@ -2,7 +2,6 @@
 
 #include <asm-generic/ioctls.h>
 #include <stddef.h>
-#include <stdio.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
@@ -11,16 +10,10 @@ typedef struct {
     size_t h;
 } termsz;
 
-static termsz get_termsize(void) {
-    struct winsize ws;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
-    return (termsz){ws.ws_col, ws.ws_row};
-}
+termsz get_termsize(void);
 
-static inline void cursor_home(void) { fputs("\x1B[;H", stdout); }
-static inline void cursor_move(size_t row, size_t col) {
-    printf("\x1B[%zu;%zuH", row, col);
-}
-static inline void cursor_prev_line(void) { fputs("\x1B[F", stdout); }
-static inline void cursor_next_line(void) { fputs("\x1B[E", stdout); }
-static inline void clear_screen(void) { fputs("\x1B[2J", stdout); }
+void cursor_home(void);
+void cursor_move(size_t row, size_t col);
+void cursor_prev_line(void);
+void cursor_next_line(void);
+void clear_screen(void);

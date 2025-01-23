@@ -10,6 +10,7 @@
 #include "../linalg/line.h"
 #include "../linalg/plane.h"
 #include "../linalg/triangle.h"
+#include "../linalg/vec.h"
 #include "../utils/macros.h"
 #include "../utils/term.h"
 #include "pixel.h"
